@@ -1,0 +1,7 @@
+# Runtime state, not source. The config library writes settings.xml here on the
+# first save.
+data/
+
+# Local edit backups
+*.bak
+*.bak-*
