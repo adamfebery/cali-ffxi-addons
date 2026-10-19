@@ -1,9 +1,10 @@
 --[[
     Zone map lookup + automatic calibration.
 
-    Map images come from sortienav (tools/extract_maps.py), which already
-    extracted every zone map from the DATs to sortienav/maps/<zone>_<map>.png
-    and listed them in sortienav/data/zone_maps.lua.
+    Map images are read straight from the game's own DATs, wherever FFXI is
+    installed (windower.ffxi_path, so it works under Steam/Proton too).
+    mapdats.lua says which DAT holds each zone map; mapimage.lua decodes it
+    to maps/<zone>_<map>.bmp the first time that map is shown.
 
     Calibration needs no clicking: windower.ffxi.get_position(x, y, z) asks
     the client which grid square ("(H-8)") any game position falls in. FFXI
@@ -14,8 +15,10 @@
 
 local map = {}
 
-local ROOT = windower.windower_path .. 'addons/sortienav/'
-local MAP_DIR = ROOT .. 'maps/'
+local image = require('mapimage')
+local mapdats = require('mapdats')
+
+local MAP_DIR = windower.addon_path .. 'maps/'
 
 local GRID_U0 = 16     -- pixel of the A / 1 grid edge on a 512 px map
 local GRID_CELL = 32   -- pixels per grid cell
@@ -24,16 +27,52 @@ local STEP = 2         -- yalms per step while walking for a grid line
 local LIMIT = 2500     -- give up after walking this far
 local BISECT = 24      -- bisection rounds (2 / 2^24 yalm, plenty)
 
-local zone_maps = nil
-local cal_cache = {}   -- ['zone:map'] = {su, ou, sv, ov} or false
+local floors_cache = {}   -- [zone] = sorted floors, or false
+local cal_cache = {}      -- ['zone:map'] = {su, ou, sv, ov} or false
 
-local function load_zone_maps()
-    if zone_maps ~= nil then return zone_maps end
-    local chunk = loadfile(ROOT .. 'data/zone_maps.lua')
-    local ok, result = false, nil
-    if chunk then ok, result = pcall(chunk) end
-    zone_maps = (ok and type(result) == 'table') and result or false
-    return zone_maps
+local function ffxi_root()
+    local path = windower.ffxi_path
+    if path:sub(-1) ~= '\\' and path:sub(-1) ~= '/' then
+        path = path .. '\\'
+    end
+    return path
+end
+
+local function exists(path)
+    local f = io.open(path, 'rb')
+    if f then f:close() end
+    return f ~= nil
+end
+
+-- Maps of a zone that this install has a DAT for: {{id, dat}, ...}
+local function zone_floors(zone_id)
+    if floors_cache[zone_id] ~= nil then return floors_cache[zone_id] end
+    local floors = {}
+    local root = ffxi_root()
+    for id, dats in pairs(mapdats[zone_id] or {}) do
+        for _, rel in ipairs(dats) do
+            if exists(root .. rel) then
+                floors[#floors + 1] = {id = id, dat = root .. rel}
+                break
+            end
+        end
+    end
+    table.sort(floors, function(a, b) return a.id < b.id end)
+    floors_cache[zone_id] = #floors > 0 and floors or false
+    return floors_cache[zone_id]
+end
+
+-- Image file for a floor, decoding it from the DAT on first use
+local function floor_image(zone_id, floor)
+    if floor.image then return floor.image end
+    local path = string.format('%s%d_%02d.bmp', MAP_DIR, zone_id, floor.id)
+    if not exists(path) then
+        if not windower.dir_exists(MAP_DIR) then windower.create_dir(MAP_DIR) end
+        local ok, err = image.extract(floor.dat, path)
+        if not ok then return nil, err end
+    end
+    floor.image = path
+    return path
 end
 
 -- Map number the client uses for this spot (floor / sub-map), or nil
@@ -160,37 +199,34 @@ end
 -- Image + pixel position for a game position in a zone.
 -- Returns {image, width, height, map, u, v} or nil, reason
 function map.locate(zone_id, x, y, z)
-    local maps = load_zone_maps()
-    if not maps then return nil, 'Map images not found (needs addons/sortienav)' end
-
-    local zm = maps[zone_id]
-    if not zm or not zm.floors or #zm.floors == 0 then
-        return nil, 'No map image for this zone'
-    end
+    local floors = zone_floors(zone_id)
+    if not floors then return nil, 'No map for this zone' end
 
     local map_id = map.map_id(x, y, z)
     local floor
-    for _, f in ipairs(zm.floors) do
-        if map_id and f.id == tostring(map_id) then floor = f break end
+    for _, f in ipairs(floors) do
+        if f.id == map_id then floor = f break end
     end
-    -- One image, or the client wouldn't say which map: use the first
-    if not floor and (#zm.floors == 1 or map_id == nil) then floor = zm.floors[1] end
+    -- One map, or the client wouldn't say which map: use the first
+    if not floor and (#floors == 1 or map_id == nil) then floor = floors[1] end
     if not floor then
         return nil, string.format('No image for map %s of this zone', tostring(map_id))
     end
+
+    local path, err = floor_image(zone_id, floor)
+    if not path then return nil, 'Map image: ' .. err end
 
     local key = tostring(zone_id) .. ':' .. floor.id
     local cal = calibrate(key, x, y, z, map_id)
     if not cal then return nil, 'Could not line up the map grid here' end
 
-    local w = floor.map.width or 512
-    local h = floor.map.height or 512
+    local w, h = 512, 512
     return {
-        image = MAP_DIR .. floor.map.image,
+        image = path,
         width = w,
         height = h,
         map = map_id,
-        label = floor.label,
+        label = 'Map ' .. floor.id,
         u = (cal.su * x + cal.ou) * w / 512,
         v = (cal.sv * y + cal.ov) * h / 512,
     }

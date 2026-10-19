@@ -5,3 +5,6 @@ data/
 # Local edit backups
 *.bak
 *.bak-*
+
+# Map images decoded from the game DATs on first use
+maps/

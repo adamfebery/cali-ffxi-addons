@@ -66,8 +66,15 @@ game still handles it as normal. Any `0x00E` the server sends for an entity in
 the zone's list updates its row, so the list keeps itself up to date while
 you're in the zone.
 
-**The map.** The map images are the ones extracted from the game DATs by the
-[sortienav](#requirements) addon. Lining a map up needs no clicking:
+**The map.** The map images come straight from your own game install, found
+through `windower.ffxi_path`, so they work wherever FFXI lives (a custom
+drive, Steam, Steam Deck/Proton). `mapdats.lua` lists which DAT holds each
+zone map (from Remapster's `dat_list.json`), and `mapimage.lua` decodes it
+(DXT3 or paletted) into `maps/<zone>_<map>.bmp` the first time you see that
+map. That takes well under a tenth of a second and is cached after that.
+Delete `maps/` to rebuild them.
+
+Lining a map up needs no clicking:
 `windower.ffxi.get_position(x, y, z)` returns the grid square (e.g. `(H-8)`)
 for *any* position. FFXI maps are 512 px, with a 15x15 grid of 32 px cells
 starting at pixel 16. ScanZone walks along each axis and bisects to find where
@@ -78,11 +85,7 @@ image to use.
 
 ## Requirements
 
-- Windower 4.
-- The map pane uses `addons/sortienav/maps/*.png` and
-  `addons/sortienav/data/zone_maps.lua`, made by sortienav's
-  `tools/extract_maps.py --all`. Without them everything else still works, and
-  the map pane says it can't find the images.
+- Windower 4. Nothing else: no other addons, no Python, no extracted images.
 
 ## Settings
 
@@ -99,6 +102,8 @@ image to use.
 
 ## Credits
 
+- Map DAT list: Remapster's `scripts/dat_list.json`
+  (github.com/AkadenTK/remapster_maps).
 - Original ScanZone (DAT lookup, `find` and `scan` commands, `datmap.lua`):
   **Project Tako**.
 - `ui/widgets.lua`, `ui/theme.lua` and the icons in `assets/` are unmodified
