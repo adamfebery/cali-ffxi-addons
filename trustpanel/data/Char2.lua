@@ -1,1 +1,0 @@
-return {name="Char2", job="BRD", online=true, assist="Char2", modes={AutoEngageMode="Always", AutoSkillchainMode="Spam", CombatMode="Mirror", AutoBuffMode="Auto", AutoFollowMode="Always", AutoPullMode="Off"}}
