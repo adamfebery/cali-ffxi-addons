@@ -71,7 +71,7 @@ function init_gear_sets()
     -- club ("Club: Loxotic Mace +1 ... Judgment / Black Halo"). Yours is Path A,
     -- unranked: DMG 190 / Delay 334 (Cudgel 142 / 278, so ~11% more damage per
     -- second and a much bigger base for Judgment), Acc+21, Atk+21, DEX+10 from
-    -- Unity, plus a latent Acc+31 Atk+31. It gives up the Cudgel's PDT-10% and
+    -- Unity (its latent Acc/Atk+31 only works under 50% HP - ignore it). It gives up the Cudgel's PDT-10% and
     -- Enmity+6. One-handed, so Blurred Shield stays and Fencer still applies.
     --
     -- THE CLUB SKILL LINE IS WHY THIS WORKS. Warrior's own Club rating is B-
@@ -259,6 +259,25 @@ function init_gear_sets()
         ammo="Coiste Bodhar",
         left_ear="Telos Earring",
         right_ear="Steelflash Earring",
+    })
+
+    -- Club TP (//gs c club) - single wield, built for WAR/DRG. 2026-11-07.
+    -- Loxotic Mace +1 + Blurred Shield keeps Fencer, and the WAR guide calls
+    -- /DRG the preferred sub for Fencer builds. No Dual Wield here: the club
+    -- set never takes an off-hand weapon, so /NIN or /DNC buys nothing.
+    -- What /DRG gives at sub 49: Attack Bonus I, Accuracy Bonus I (+10 Acc),
+    -- Damage Limit+ I, Smite I, WS Damage Boost I, Conserve TP I, plus Jump /
+    -- High Jump (free TP / enmity drop) and Ancient Circle.
+    --
+    -- One swap from sets.engaged: Accuracy Bonus covers Defiant Collar's Acc+8,
+    -- so the neck goes to attack. Rep. Plat. Medal STR+10 Attack+30 over
+    -- Defiant's TA+1% / Subtle Blow+3. Not modelled - stat priority only. If
+    -- you are missing a lot (Apex/high-evasion), put Defiant Collar back.
+    -- Everything else in sets.engaged already suits a slow one-hander with
+    -- Fencer: Sakpata body/hands (DA, PDL), Pummeler's legs/feet (DA, Haste),
+    -- Boii right ear, Brutal left, Chirich + Petrov.
+    sets.engaged.Club = set_combine(sets.engaged, {
+        neck="Rep. Plat. Medal",      -- STR+10, Attack+30 (wardrobe3)
     })
 
     -- DT mode (//gs c dt toggles it; the gearbar DT button sends that).
@@ -639,11 +658,15 @@ end
 -- passes it because player.equipment still shows the old weapons until the
 -- swap lands.
 local DW_OFFHANDS = S{'Sangarius +1'}
+local CLUB_MAINS  = S{'Loxotic Mace +1', 'Mafic Cudgel'}
 
 local function weapon_engaged_set(weapons)
     local main = weapons and weapons.main or player.equipment.main
     local sub  = weapons and weapons.sub  or player.equipment.sub
-    if DW_OFFHANDS:contains(sub)
+    -- Club first: it is always single wield, whatever the subjob.
+    if CLUB_MAINS:contains(main) then
+        return sets.engaged.Club
+    elseif DW_OFFHANDS:contains(sub)
             and (player.sub_job == 'DNC' or player.sub_job == 'NIN') then
         return sets.engaged.DW
     -- Same reason: checked against the equipped weapon, not WeaponMode.
@@ -730,6 +753,10 @@ function job_self_command(cmdParams, eventArgs)
         equip(swapped)
         add_to_chat(122, 'GearSwap: Club / Loxotic Mace +1 + Blurred Shield '
             .. '(Judgment - blunt damage)')
+        if player.sub_job ~= 'DRG' then
+            add_to_chat(167, 'GearSwap: club set is built for /DRG (you are /'
+                .. (player.sub_job or '?') .. ')')
+        end
 
     elseif cmd == 'polearm' or cmd == 'pole' or cmd == 'so' then
         state.WeaponMode:set('Polearm')
