@@ -2,7 +2,8 @@
 
 Windower 4 addons for Final Fantasy XI, plus local patches to a few third-party addons.
 
-Install: copy an addon's folder into `Windower/addons/`, then `//lua load <name>`.
+Install: copy an addon's folder into `Windower/addons/`, then `//lua load <name>`. Each folder has
+its own README with commands and setup.
 
 Character names in configs and comments have been replaced with `Char1`, `Char2`, and so on.
 Put your own names back before you use any per-character settings (`charload`, `trustpanel`,
@@ -22,13 +23,13 @@ Put your own names back before you use any per-character settings (`charload`, `
 | [manloop](manloop/) | Keeps a set mix of PUP maneuvers up (default 2 Wind + 1 Water) |
 | [aoewatch](aoewatch/) | Names any party member (or pet) whose action hits more than one monster |
 | [whyfail](whyfail/) | When the game says "cannot perform that action", prints the last commands sent |
-| [jpstop](jpstop/) | Job point helper. It knows when you are engaged or a party-claimed mob is still alive nearby |
-| [autows](autows/) | Automatic weapon skills per character, job and weapon, with HP% and TP conditions |
+| [jpstop](jpstop/) | When unspent job points reach a threshold, waits for combat to end, then stops Trust and quits the game (`/shutdown`) |
+| [autows](autows/) | Fires Sniper Shot automatically at 1000 TP while you're engaged |
 | [autoring](autoring/) | Keeps a Capacity Point or EXP ring buff up |
 | [autosilc](autosilc/) | Skillchain helper (moved here from its own repo) |
 | [banishspam](banishspam/) | Casts Banish on your current target on a timer (`//bspam`) |
 | [bluelearn](bluelearn/), [bluesets](bluesets/), [bluexport](bluexport/) | Blue Mage: track learned spells, save and load spell sets, and export known spells, the current set and traits to a text file |
-| [warpmenu](warpmenu/) | Warp menu |
+| [warpmenu](warpmenu/) | Clickable Superwarp menu: Jeuno, Mhaura, Eastern Adoulin |
 | [charload](charload/) | Loads addons only on specific characters and unloads them on logout |
 
 ## Patched third-party addons
