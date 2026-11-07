@@ -1,0 +1,9 @@
+# Runtime state and local files
+settings.xml
+settings.db
+*.bak
+*.bak-*
+*.log
+maps/
+__pycache__/
+*.pyc

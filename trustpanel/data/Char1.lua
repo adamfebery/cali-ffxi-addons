@@ -1,0 +1,1 @@
+return {name="Char1", job="SAM", online=true, assist="Char1", modes={AutoEngageMode="Always", AutoSkillchainMode="Off", CombatMode="Off", AutoBuffMode="Auto", AutoFollowMode="Always", AutoPullMode="Auto"}}

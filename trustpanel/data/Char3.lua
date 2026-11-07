@@ -1,0 +1,1 @@
+return {name="Char3", job="WHM", online=true, assist="Char1", modes={AutoEngageMode="Off", AutoSkillchainMode="Off", CombatMode="Off", AutoBuffMode="Auto", AutoFollowMode="Always", AutoPullMode="Off", AutoNukeMode="Off"}}
