@@ -87,7 +87,7 @@ function init_gear_sets()
         ammo="Coiste Bodhar",
         head="Kasuga Kabuto +2",
         body="Kasuga Domaru +3",
-        hands="Wakido Kote +3",
+        hands="Wakido Kote +4",
         legs="Kasuga Haidate +2",
         feet="Kas. Sune-Ate +2",
         neck={name="Sam. Nodowa +1", augments={'Path: A'}},
@@ -147,9 +147,9 @@ function init_gear_sets()
     -- TH only has to be on for the hits that tag the mob - turn it off once
     -- the mob is tagged and you're back to the full TP set.
     --
-    -- Cost while on: Kasuga Kabuto +2, Wakido Kote +3 and Kasuga Haidate +2
+    -- Cost while on: Kasuga Kabuto +2, Wakido Kote +4 and Kasuga Haidate +2
     -- come off, which drops the Kabuto's DT-9%, Haste+7% and STP+11, the Kote's
-    -- Acc+48 and the Haidate's DT-10% and STP+10. Sets.TP.DT loses both DT
+    -- Acc+58 and the Haidate's DT-10% and STP+10. Sets.TP.DT loses both DT
     -- pieces, so don't lean on TH mode as a tank set.
     sets.TH = {
         ammo="Per. Lucky Egg",        -- TH+1
@@ -263,11 +263,11 @@ function init_gear_sets()
     --
     --   head   Flam. Zucchetto +2 21.6  Acc 44   ->  Kasuga Kabuto +2   25.0  Acc 51
     --   body   Sakonji Domaru +2  30.4  Acc 37   ->  Kasuga Domaru +3   37.6  Acc 64
-    --   hands  Valorous Mitts     15.4  Acc 10   ->  Wakido Kote +3     27.6  Acc 48
+    --   hands  Valorous Mitts     15.4  Acc 10   ->  Wakido Kote +4     27.6  Acc 58
     --   legs   Wakido Haidate +4  30.8  Acc 59   ->  unchanged, it wins both ways
     --   feet   Valorous Greaves   18.8  Acc 12   ->  Kas. Sune-Ate +2   27.8  Acc 50
     --
-    -- Net: +32 mod stat and +110 accuracy over GKT_WS. The Kasuga set carries
+    -- Net: +32 mod stat and +120 accuracy over GKT_WS. The Kasuga set carries
     -- the CHR and the accuracy together, so there is no trade to make here.
     --
     -- Accessories keep the GKT_WS choices: you own no CHR neck, waist, ear,
@@ -310,7 +310,7 @@ function init_gear_sets()
         ammo="Knobkierrie",
         head="Kasuga Kabuto +2",
         body="Kasuga Domaru +3",
-        hands="Wakido Kote +3",
+        hands="Wakido Kote +4",
         legs="Wakido Haidate +4",
         feet="Kas. Sune-Ate +2",
         neck={name="Sam. Nodowa +1", augments={'Path: A'}},
@@ -338,7 +338,7 @@ function init_gear_sets()
         back={name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Damage taken-5%'}},
     }
 
-    -- Hasso. Wakido Kote +3 is "Hasso"+4 (gearinfo dump, Char1_data.lua):
+    -- Hasso. Wakido Kote +4 is "Hasso"+4 (gearinfo dump, Char1_data.lua):
     -- it raises the STR bonus Hasso grants, and that bonus is fixed when the
     -- ability goes off - so the gloves have to be ON at activation, not later.
     -- Both TP sets already wear them, but sets.idle does not (it runs
@@ -350,7 +350,7 @@ function init_gear_sets()
     -- Kasuga Haidate +2's separate "Hasso": Haste+3% IS a worn-while-active
     -- line, and it is already in sets.TP.Normal, sets.TP.DT and sets.idle, so
     -- it needs nothing here.
-    sets.precast.JA['Hasso'] = {hands="Wakido Kote +3"}
+    sets.precast.JA['Hasso'] = {hands="Wakido Kote +4"}
 
     -- 2026-10-21 GearSwap-Optimizer pass. Fudo keeps GKT_WS (its own set beat
     -- the optimizer's by 2-3%). Kasha and Gekko take Kasuga Domaru +3 over

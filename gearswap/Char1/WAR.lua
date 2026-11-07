@@ -2,7 +2,7 @@
 --
 -- Great Axe = Lightreaver              (Upheaval spam - see sets.UPHEAVAL)
 -- Sword     = Naegling + Blurred Shield (Savage Blade, +15% from Naegling)
--- Club      = Mafic Cudgel + Blurred Shield (Judgment - blunt, for skeletons)
+-- Club      = Loxotic Mace +1 + Blurred Shield (Judgment - blunt, for skeletons)
 -- Dual Wield = Naegling + Sangarius +1  (needs /DNC or /NIN)
 -- Polearm   = Shining One + Daduchos Grip (Impulse Drive spam - see sets.IMPULSE)
 --
@@ -13,7 +13,7 @@
 -- Commands:
 --   //gs c ga        equip Lightreaver (great axe, 2H - empties sub)
 --   //gs c sword     equip Naegling + Blurred Shield
---   //gs c blunt     equip Mafic Cudgel + Blurred Shield (or //gs c club)
+--   //gs c blunt     equip Loxotic Mace +1 + Blurred Shield (or //gs c club)
 --   //gs c dw        equip Naegling + Sangarius +1 (only as /DNC or /NIN)
 --   //gs c polearm   equip Shining One + Daduchos Grip (or //gs c pole, //gs c so)
 --   //gs c dt        toggle DT mode (-32%) over whatever TP set is on
@@ -66,19 +66,23 @@ function init_gear_sets()
         sub="Blurred Shield",         -- iL119 WAR/PLD/DRK, Acc+15, Atk+15, WSD+5%
     }
 
-    -- Blunt, for skeletons and anything else that shrugs off slashing. Mafic
-    -- Cudgel is one-handed (DMG 142 / Delay 278), so Blurred Shield stays in the
-    -- off-hand exactly as it does with Naegling - the WSD+5% counts on Judgment
-    -- too.
+    -- Blunt, for skeletons and anything else that shrugs off slashing.
+    -- 2026-11-07: Loxotic Mace +1 replaces Mafic Cudgel. It is the WAR guide's
+    -- club ("Club: Loxotic Mace +1 ... Judgment / Black Halo"). Yours is Path A,
+    -- unranked: DMG 190 / Delay 334 (Cudgel 142 / 278, so ~11% more damage per
+    -- second and a much bigger base for Judgment), Acc+21, Atk+21, DEX+10 from
+    -- Unity, plus a latent Acc+31 Atk+31. It gives up the Cudgel's PDT-10% and
+    -- Enmity+6. One-handed, so Blurred Shield stays and Fencer still applies.
     --
     -- THE CLUB SKILL LINE IS WHY THIS WORKS. Warrior's own Club rating is B-
     -- (cap ~388), but skill only rises by swinging a club, and Char1's is
-    -- presumably near zero. Mafic Cudgel's "Club skill +228" carries the whole
-    -- thing: it clears True Strike (175 skill) and Judgment (200) immediately.
-    -- Black Halo needs 230 AND the Orastery Woes quest, so it is out of reach;
+    -- presumably near zero. The Mace's "Club skill +242" (Cudgel had +228)
+    -- clears True Strike (175) and Judgment (200) immediately, and Black Halo's
+    -- 230 too - but Black Halo still needs the Orastery Woes quest.
     -- Hexa Strike is WHM/GEO only unless you main-hand a Beryllium Mace.
+    -- Mafic Cudgel stays in wardrobe 3 if you want the PDT-10% back.
     sets.weapons.Club = {
-        main="Mafic Cudgel",          -- iL119, Acc+27, Enmity+6, PDT-10%, Club skill +228
+        main="Loxotic Mace +1",       -- iL119, DMG 190 / Delay 334, Acc+21, Atk+21, Club skill +242
         sub="Blurred Shield",         -- same shield as the Sword set
     }
 
@@ -439,7 +443,7 @@ function init_gear_sets()
         legs="Sulev. Cuisses +2",
     })
 
-    -- JUDGMENT (Mafic Cudgel) - 50% STR / 50% MND, which is the SAME split as
+    -- JUDGMENT (Loxotic Mace +1) - 50% STR / 50% MND, which is the SAME split as
     -- Savage Blade, so this is sets.SAVAGE under another name: the two Sulevia
     -- pieces are in it for their MND, exactly as documented above. Kept as its
     -- own name rather than pointing sets.precast.WS['Judgment'] straight at
@@ -520,6 +524,8 @@ function init_gear_sets()
     sets.precast.WS['Judgment']       = sets.JUDGMENT
     sets.precast.WS['Shining Strike'] = sets.JUDGMENT
     sets.precast.WS['Seraph Strike']  = sets.JUDGMENT
+    --   Black Halo      230 skill   30% STR / 70% MND (needs the Orastery Woes quest)
+    sets.precast.WS['Black Halo']     = sets.JUDGMENT
     --   True Strike     175 skill   100% STR (and a guaranteed crit)
     --   Skullbreaker    150 skill   100% STR
     --   Brainshaker      70 skill   100% STR
@@ -598,7 +604,7 @@ end
 -- cap from 2500 TP on its own - Moonshade there only throws away the
 -- Ishvara it replaces. Dual wield and two-handed weapons get no Fencer and
 -- keep the 2750 cutoff. Add any new one-hander / shield to these lists.
-local FENCER_MAINS = S{'Naegling', 'Mafic Cudgel'}
+local FENCER_MAINS = S{'Naegling', 'Loxotic Mace +1', 'Mafic Cudgel'}
 local SHIELDS      = S{'Blurred Shield'}
 
 local function fencer_active()
@@ -722,7 +728,7 @@ function job_self_command(cmdParams, eventArgs)
         state.WeaponMode:set('Club')
         swapped = sets.weapons.Club
         equip(swapped)
-        add_to_chat(122, 'GearSwap: Club / Mafic Cudgel + Blurred Shield '
+        add_to_chat(122, 'GearSwap: Club / Loxotic Mace +1 + Blurred Shield '
             .. '(Judgment - blunt damage)')
 
     elseif cmd == 'polearm' or cmd == 'pole' or cmd == 'so' then
