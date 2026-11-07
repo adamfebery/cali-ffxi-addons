@@ -1,6 +1,6 @@
 # GearSwap job files
 
-GearSwap luas sorted by character. This branch (`gearswap`) is for gear updates; `main` holds the addons.
+GearSwap luas sorted by character.
 
 | Folder | Jobs |
 |---|---|

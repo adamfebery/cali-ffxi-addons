@@ -38,6 +38,11 @@ Put your own names back before you use any per-character settings (`charload`, `
 notices kept. Trust and GearInfo are **not** included because their licences don't allow it.
 See [`patched/README.md`](patched/README.md) and [`docs/trust-patches.md`](docs/trust-patches.md).
 
+## GearSwap job files
+
+[`gearswap/`](gearswap/) holds GearSwap job luas sorted by character (Char1–Char3). See
+[`gearswap/README.md`](gearswap/README.md) for which jobs each folder has.
+
 ## Not included
 
 - Map images (`maps/`): these are Square Enix assets decoded from your own game install. Both
